@@ -2,7 +2,7 @@
 
 기본: proxyBeanMethods = true 이다.
 
-proxyBeanMethods 은 런타임에 동적으로 Configuration 객체를 프록시로 생성할지 말지를 컨트롤한다.
+proxyBeanMethods 은 런타임에 동적으로 @Bean 메서드 반환값이 객체를 프록시로 생성할지 말지를 컨트롤한다.
 
 프록시가 하는 역할은 내부에 있는 @Bean 이 한 번만 생성되도록 관리한다
 proxyBeanMethods 가 true 인 경우에는 아래의 코드에서 new SomeBean() 이 딱 한번만 호출되도록 관리할 수 있다.
