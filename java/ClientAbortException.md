@@ -1,0 +1,28 @@
+### ClientAbortException
+
+클라이언트에서 서버로 요청을 한 뒤 응답을 받기전에 요청이 중단되었을 경우 발생 되는 예외
+
+### 예상 시나리오
+
+`시나리오 A`
+
+클라이언트에서 서버에 HTTP 요청이 된다
+HTTP 응답을 받기 전에 동일한 End-point에 대한 HTTP 요청을 한다
+
+`시나리오 B`
+
+클라이언트에서 서버에 파일 업로드와 같은 비교적 긴 HTTP 요청을 한다
+웹 브라우져 또는 모바일 클라이언트에서 요청이 진행되는 중에 강제로 HTTP 요청을 중지한다
+
+### ClientAbortException 을 해결하려면?
+
+1. 서버 측에서 처리 속도를 더 빠르게 한다.
+2. 처리 속도는 빠르지만 응답이 크다면 응답의 사이즈를 줄인 API를 제공한다 (불필요한 필드 제거 or 페이징 API 제공)
+3. 클라이언트 측 리드 타임아웃 설정값을 늘린다.
+4. 정 합의가 안 된다면 ClientAbortException을 핸들링 해서 log.info로만 남긴다. (장애 상황은 아니라서 불필요한 노이즈라고 판단된다는 가정 하에)
+5. 클라이언트 측에서는 ReadTimeout이 발생했다면(ClientAbortException 여부와 상관 없이), 장애 상황(고객에게 돈은 출금이 됐는데 주문은 완료처리 안 됐다던지)을 막기 위해 서버 측에 취소
+   API 같은 걸 호출하거나 상태 조회 API 같은 걸 호출한 이후 내가 처리를 따로 해야하는 건지 아닌지 판단한 후에 올바른 처리를 해줘야한다.
+
+- [참고자료1](https://perfectacle.github.io/2022/03/20/client-abort-exception-deep-dive-part-02/)
+- [참고자료1](https://perfectacle.github.io/2022/03/20/client-abort-exception-deep-dive-part-02/)
+
