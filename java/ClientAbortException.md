@@ -24,5 +24,4 @@ HTTP 응답을 받기 전에 동일한 End-point에 대한 HTTP 요청을 한다
    API 같은 걸 호출하거나 상태 조회 API 같은 걸 호출한 이후 내가 처리를 따로 해야하는 건지 아닌지 판단한 후에 올바른 처리를 해줘야한다.
 
 - [참고자료1](https://perfectacle.github.io/2022/03/20/client-abort-exception-deep-dive-part-02/)
-- [참고자료1](https://perfectacle.github.io/2022/03/20/client-abort-exception-deep-dive-part-02/)
 
