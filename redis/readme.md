@@ -43,9 +43,47 @@ insert query 한번씩 500개 VS insert query 한번에 500개
 
 ### 왜 Collection 이 중요한가?
 
-redis 는 Collection 이 제공됨
+**redis 는 Collection 이 제공됨**
 
-- 개발의 편의성
-- 개발의 난이도
+- 개발의 편의성 좋아지고
+- 개발의 난이도 낮아짐
+
+### 예시. 랭킹 기능 만들기
+
+- 가장 간단한 방법
+    - DB에 유저의 Score 를 저장하고 Score 로 order by 로 정렬 후 읽어오기
+    - 개수가 많아지면 속도에 문제가 발생할 수 있음 (디스크를 사용하기 때문)
+- Redis 의 `Sorted Set` 을 이용하면, 랭킹을 구현 할 수 있음
+    - 덤으로, Replication 도 가능...
+    - 다만 가져다 쓰면 거기의 한계에 종석적이 됨
+        - 랭킹에 저장해야할 id가 1개당 100byte라고 했을 때
+            - 10명 1K
+            - 10000명 1M
+            - 100000000명 1G
+            - 1000000000000 명 1TB // 10조 명
+
+Redis 의 경우는 자료구조가 Atomic 하기 때문에, 해당 Race Condition 을 피할 수 있다.
+
+- 그래도 잘못짜면 발생함.
+    - 따닥 (클릭 두번했을 때..)
+
+## Redis 사용처
+
+- Remote Data Store
+    - A서버, B서버, C서버에서 데이터를 공유하고 싶을 때
+- 한대에서만 필요하다면 Redis 자체가 Atomic을 보장해준다. (싱글 스레드라..)
+- 주로 많이 쓰는 곳들
+    - 인증 토큰 등을 저장 (Strings 또는 hash)
+    - Ranking 보드로 사용(Sorted Set)
+    - 유저 API Limit
+    - 자큐(list)
+
+### Redis Collections
+
+- Strings
+- List
+- Set
+- Sorted Set
+- Hash
 
 
