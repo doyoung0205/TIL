@@ -80,10 +80,19 @@ Redis 의 경우는 자료구조가 Atomic 하기 때문에, 해당 Race Conditi
 
 ### Redis Collections
 
-- Strings
+- Strings (가장 많이)
 - List
 - Set
-- Sorted Set
-- Hash
+- Sorted Set (가장 많이, store 가 있어 정렬함 -> 너무 큰수는 틀어진다. 1000 이면 1003, 자바스크립트도 비슷해 너무 큰수는 숫자형이 아니라 문자열로 바꿔서 보낸다. Long ->
+  String )
+- Hash (key 안의 subkey 로 값을 추가함)
+
+
+### Collection 주의 사항
+
+- 하나의 컬렉션에 너무 많은 아이템을 담으면 좋지 않음
+  - 10000개 이하 몇천개 수준으로 유지하는게 좋음
+- Expire는 Collection 의 item 개별로 걸리지 않고 전체 Collection 에 대해서만 걸림
+  - 즉 해당 10000개의 아이템을 가진 Collection에 expire 가 걸려있다면 그 시간 후에 1000개의 아이템이 모두 삭제
 
 
