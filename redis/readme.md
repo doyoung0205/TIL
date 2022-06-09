@@ -157,3 +157,55 @@ Redis is Single threaded
 ### KEYS 는 어떻게 대체할 것인가?
 
 - scan 명령을 사용하는 것으로 하나의 긴 명령을 짧은 여러번의 명령으로 바꿀 수 있다.
+
+### Monitoring Factor
+
+- Redis Info 를 통한 정보
+    - RSS (OS 에서 redis 때문에 사용되는 메모리, 주로 단편화가 많이 일어나면 매우 Used Memory 보다 매우 높음)
+    - Used Memory (redis 에서 사용하는 메모리)
+    - Connection 수
+    - 초당 처리 요청 수 (영향을 CPU 에 받음)
+- System
+    - CPU
+    - Disk
+    - Network rx/tx
+
+
+### CPU 100%를 칠 겅우
+
+- 처리량이 매우 많다면? 
+  - 좀 더 CPU 성능이 좋은 서버로 이전
+  - 실제 CPU 성능에 영향을 받음
+    - 그러나 단순 get / set 은 초당 10만 이상 처리가능
+- O(N) 계열의 특정 명령이 많은 경우
+  - Monitor 명령을 통해 특정 패턴을 파악하는 것이 필요
+  - Monitor 잘못쓰면 부하로 해당 서버에 더 큰문제를 일으킬 수 있음 (짧게 쓰는게 좋음)
+
+
+
+### 결론
+
+- 기본적으로 Redis 는 매우 좋은 툴
+- 그러나 메모리를 빡빡하게 쓸 경우, 관리하기가 어려움
+  - 32기가 장비라면 24기가 이상 사용하면 장비 증설 하는 것이 좋음
+  - write 가 heavy 할 때는 migration도 매우 주의해야함.
+- Client-output-buffer-limit 설정이 핋요
+
+### Redis as Cache
+
+- Cache 일 경우 문제가 적게 발생 
+  - Redis 가 문제가 있을 때 DB등의 부하가 어느정도 증가하는 지 확인 필요
+  - Consistent Hashing도 실제 부하를 아주 균등하게 나누지는 않음.
+    Adaptive Consistent Hashing 을 이용해 볼 수도 있음.
+
+### Redis as Persistent Store
+
+- Persistent Store 의 경우
+  - 무조건 Primary / Secondary 구조로 구성이 필요함
+  - 메모리를 절대로 빡빡하게 사용하면 안됨.
+    - 정기적인 migration 이 필요.
+    - 가능하면 자동화 툴을 만들어서 이용
+  - RDB / AOF가 필요하다면 Secondary 에서만 구동
+-> 최대한 돈을 많이 투자하고 메모리 덜 쓰자
+
+
