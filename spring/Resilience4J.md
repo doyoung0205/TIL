@@ -16,6 +16,18 @@ Resilience4J는 아래 6가지 핵심모듈로 구성되어 있습니다.
 ### circuit breaker
 
 https://resilience4j.readme.io/docs/circuitbreaker
+CircuitBreaker 는 세 가지 정상 상태(CLOSED, OPEN 및 HALF_OPEN)와 두 가지 특수 상태 DISABLED 및 FORCED_OPEN 이 있는 유한 상태 기계를 통해 구현됩니다.
+![CircuitBreaker.png](CircuitBreaker.png)
+
+CircuitBreaker는 슬라이딩 윈도우를 사용하여 호출 결과를 저장하고 집계합니다.
+개수 기반 슬라이딩 윈도우와 시간 기반 슬라이딩 윈도우 중에서 선택할 수 있습니다.
+카운트 기반 슬라이딩 윈도우는 마지막 N 호출의 결과를 집계합니다.
+
+### Count-based sliding window
+
+윈도우 갯수 크기가 10이면 원형 배열에는 항상 10개의 측정값이 있습니다.
+
+### Time-based sliding window
 
 ```
 CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
@@ -34,19 +46,17 @@ CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
         .build();
 ```
 
-| 속성                                            | 기본값 | 설명  |
-|-----------------------------------------------|-----|-----|
-| failureRateThreshold                          |     |     |
-| slowCallRateThreshold                         |     |     |
-| slowCallDurationThreshold                     |     |     |
-| permittedNumberOfCalls InHalfOpenState        |     |     |
-| maxWaitDurationInHalfOpenState                |     |     |
-| slidingWindowType                             |     |     |
-| slidingWindowSize                             |     |     |
-| minimumNumberOfCalls                          |     |     |
-| waitDurationInOpenState                       |     |     |
-| automaticTransition FromOpenToHalfOpenEnabled |     |     |
-| recordExceptions                              |     |     |
-| ignoreExceptions                              |     |     |
-| recordFailurePredicate                        |     |     |
-| ignoreExceptionPredicate                      |     |     |
+- name: 서킷브레이커의 이름
+- failureRateThreshold: 실패 비율의 임계치
+- slowCallRateThreshold: 느린 호출의 임계치
+- slowCallDurationThreshold: 느린 호출로 간주할 시간 값
+- slidingWindowType: 서킷브레이커의 타입을 지정한다. TIME_BASED, COUNT_BASED 중 택 1
+- slidingWindowSize: 시간은 단위 초, 카운트는 단위 요청 수
+- minimumNumberOfCalls: 총 집계가 유효해 지는 최소한의 요청 수. 이 값이 1000이라면 999번 실패해도 서킷브레이커는 상태변이가 일어나지 않는다.
+- waitDurationInOpenState: OPEN에서 HALF_OPEN으로 상태변이가 실행되는 최소 대기 시간
+- permittedNumberOfCallsInHalfOpenState: HALF_OPEN 상태에서 총 집계가 유효해지는 최소한의 요청 수. COUNT_BASED로 slidingWindowType이 고정되어 있다.
+- automaticTransition: true라면 waitDurationInOpenState로 지정한 시간이 지났을 때 새로운 요청이 들어오지 않아도 자동으로 HALF_OPEN으로 상태변이가 발생한다.
+- ignoreExceptions: 해당 값에 기재한 exception은 모두 실패로 집계하지 않는다.
+- recordExceptions: 해당 값에 기재한 exception은 모두 실패로 집계한다.
+ 
+
