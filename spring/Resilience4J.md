@@ -12,3 +12,41 @@ Resilience4J는 아래 6가지 핵심모듈로 구성되어 있습니다.
 - Retry: 요청이 실패하였을 때, 재시도하는 기능 제공
 - TimeLimiter: 응답시간이 지정된 시간을 초과하면 Timeout을 발생시켜줌
 - Cache: 응답 결과를 캐싱하는 기능 제공
+
+### circuit breaker
+
+https://resilience4j.readme.io/docs/circuitbreaker
+
+```
+CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
+        .failureRateThreshold(50)
+        .slowCallRateThreshold(50)
+        .waitDurationInOpenState(Duration.ofMillis(1000))
+        .slowCallDurationThreshold(Duration.ofSeconds(2))
+        .permittedNumberOfCallsInHalfOpenState(3)
+        .minimumNumberOfCalls(10)
+        .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.TIME_BASED)
+        .slidingWindowSize(5)
+        .recordException(e -> INTERNAL_SERVER_ERROR
+                .equals(getResponse().getStatus()))
+        .recordExceptions(IOException.class, TimeoutException.class)
+        .ignoreExceptions(BusinessException.class, OtherBusinessException.class)
+        .build();
+```
+
+| 속성                                            | 기본값 | 설명  |
+|-----------------------------------------------|-----|-----|
+| failureRateThreshold                          |     |     |
+| slowCallRateThreshold                         |     |     |
+| slowCallDurationThreshold                     |     |     |
+| permittedNumberOfCalls InHalfOpenState        |     |     |
+| maxWaitDurationInHalfOpenState                |     |     |
+| slidingWindowType                             |     |     |
+| slidingWindowSize                             |     |     |
+| minimumNumberOfCalls                          |     |     |
+| waitDurationInOpenState                       |     |     |
+| automaticTransition FromOpenToHalfOpenEnabled |     |     |
+| recordExceptions                              |     |     |
+| ignoreExceptions                              |     |     |
+| recordFailurePredicate                        |     |     |
+| ignoreExceptionPredicate                      |     |     |
