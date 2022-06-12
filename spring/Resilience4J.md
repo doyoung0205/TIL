@@ -51,12 +51,29 @@ CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
 - slowCallRateThreshold: 느린 호출의 임계치
 - slowCallDurationThreshold: 느린 호출로 간주할 시간 값
 - slidingWindowType: 서킷브레이커의 타입을 지정한다. TIME_BASED, COUNT_BASED 중 택 1
-- slidingWindowSize: 시간은 단위 초, 카운트는 단위 요청 수
+- slidingWindowSize: 닫힌 상태에서 호출 결과를 집계할 때 사용하는 단위 -> 시간은 단위 초, 카운트는 단위 요청 수
 - minimumNumberOfCalls: 총 집계가 유효해 지는 최소한의 요청 수. 이 값이 1000이라면 999번 실패해도 서킷브레이커는 상태변이가 일어나지 않는다.
 - waitDurationInOpenState: OPEN에서 HALF_OPEN으로 상태변이가 실행되는 최소 대기 시간
 - permittedNumberOfCallsInHalfOpenState: HALF_OPEN 상태에서 총 집계가 유효해지는 최소한의 요청 수. COUNT_BASED로 slidingWindowType이 고정되어 있다.
-- automaticTransition: true라면 waitDurationInOpenState로 지정한 시간이 지났을 때 새로운 요청이 들어오지 않아도 자동으로 HALF_OPEN으로 상태변이가 발생한다.
+- automaticTransition: true라면 waitDurationInOpenState 로 지정한 시간이 지났을 때 새로운 요청이 들어오지 않아도 자동으로 HALF_OPEN으로 상태변이가 발생한다.
 - ignoreExceptions: 해당 값에 기재한 exception은 모두 실패로 집계하지 않는다.
 - recordExceptions: 해당 값에 기재한 exception은 모두 실패로 집계한다.
- 
 
+```
+
+// Given
+CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("testName");
+
+// When I decorate my function
+CheckedFunction0<String> decoratedSupplier = CircuitBreaker
+        .decorateCheckedSupplier(circuitBreaker, () -> "This can be any method which returns: 'Hello");
+
+// and chain an other function with map
+Try<String> result = Try.of(decoratedSupplier)
+                .map(value -> value + " world'");
+
+// Then the Try Monad returns a Success<String>, if all functions ran successfully.
+assertThat(result.isSuccess()).isTrue();
+assertThat(result.get()).isEqualTo("This can be any method which returns: 'Hello world'");
+
+```
