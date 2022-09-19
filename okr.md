@@ -2,6 +2,7 @@
 
 
 ## why?
+
 - 목적/목표를 명확하게 해 준다. (OKRs help you articulate your goals)
 - 진행 상황을 추적하고 측정할 수 있게 해 준다. (OKRs help you track and measure progress)
 - 목표를 재평가하고 더 크게 도전할 수 있게 해 준다. (OKRs help you reassess and stretch)
