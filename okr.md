@@ -47,3 +47,5 @@
   - Initiative 2. (당일 처리율 개선과 병렬로) 파트너 어드민 사용매뉴얼 공유 및 정기적인 업데이트 시행을 통해 문의를 줄인다.
 
 
+cc. https://www.whatmatters.com/
+
