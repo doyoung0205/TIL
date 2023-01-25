@@ -108,7 +108,7 @@ Redis 의 경우는 자료구조가 Atomic 하기 때문에, 해당 Race Conditi
     - Swap 이 있다면 Swap 사용으로 해당 메모리 Page 접근시 마다 늦어짐
     - Swap 이 없다면 ?
 - Max memory 를 설정하더라도 이보다 더 사용할 가능성이 큼.
-- RSS 값을 모니터링 해야함.
+- use memory 대신 use memory RSS 값을 모니터링 해야함.
 
 > 메모리 파편화가 발생할 수 있음
 
